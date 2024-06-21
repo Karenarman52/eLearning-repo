@@ -1,6 +1,7 @@
 import 'package:elearn/models/topic.dart';
 import 'package:elearn/theme/themeProvider.dart';
 import 'package:elearn/utils/colorUtility.dart';
+import 'package:elearn/views/Topic/topicPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +50,7 @@ class TopicTile extends StatelessWidget {
       ),
       child: ListTile(
         onTap: () {
-          
+          Navigator.push(context, MaterialPageRoute(builder:(context) => TopicPage(topic: topic),));     
         },
         leading: Container(
           width:Provider.of<ThemeProvider>(context).fontSize + 35,
