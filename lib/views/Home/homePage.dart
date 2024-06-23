@@ -15,9 +15,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>{
+class _HomePageState extends State<HomePage> {
   List<Module> modules = [];
-  List<Topic> topicsInModule = [];
   List<List<Topic>> topicsInAllModules = [];
   bool isFetchingModules = true;
   bool isFetchingTopics = true;
@@ -38,30 +37,18 @@ class _HomePageState extends State<HomePage>{
     fetchAllTopics();
   }
 
-  Future<void> fetchAllTopics() async{
-    await  Future.delayed(const Duration(milliseconds: 1500));
+  Future<void> fetchAllTopics() async {
+    await Future.delayed(const Duration(milliseconds: 1500));
+    List<List<Topic>> fetchedTopicsInAllModules = [];
     for (var module in modules) {
-      List<Topic> fetchedTopic = await TopicServices.fetchTopicsInModule(module.moduleId);
-      topicsInAllModules.add(fetchedTopic);
-      fetchedTopic = [];
+      List<Topic> fetchedTopics = await TopicServices.fetchTopicsInModule(module.moduleId);
+      fetchedTopicsInAllModules.add(fetchedTopics);
     }
     setState(() {
+      topicsInAllModules = fetchedTopicsInAllModules;
       isFetchingTopics = false;
     });
     print("All topics in total : ${topicsInAllModules.length}");
-  }
-
-  Future<void> fetchTopicsInModule(int moduleId) async {
-    List<Topic> fetchedTopic = await TopicServices.fetchTopicsInModule(moduleId);
-    await Future.delayed(const Duration(milliseconds: 500));
-    setState(() {
-      topicsInModule = fetchedTopic;
-      isFetchingTopics = false;
-    });
-  }
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -121,20 +108,16 @@ class _HomePageState extends State<HomePage>{
           body: isFetchingTopics
               ? const Center(child: ECircularProgressIndicator())
               : Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TabBarView(
-                    // controller: TabController(length: modules.length, vsync: TickerProvider()),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TabBarView(
                     physics: const BouncingScrollPhysics(),
-                    children: topicsInAllModules.map((module) {
-                      if (isFetchingTopics) {
-                        return const Center(child: ECircularProgressIndicator());
-                      }
+                    children: topicsInAllModules.map((topics) {
                       return TopicsWidget(
-                        topics: module
+                        topics: topics,
                       );
                     }).toList(),
                   ),
-              ),
+                ),
         ),
       ),
     );

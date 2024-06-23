@@ -1,29 +1,29 @@
-import 'package:elearn/models/topic.dart';
-import 'package:elearn/theme/themeProvider.dart';
-import 'package:elearn/utils/colorUtility.dart';
 import 'package:elearn/views/Topic/topicPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:elearn/models/topic.dart';
 import 'package:provider/provider.dart';
+import 'package:elearn/theme/themeProvider.dart';
+import 'package:elearn/utils/colorUtility.dart';
 
 class TopicsWidget extends StatelessWidget {
   final List<Topic> topics;
+
   const TopicsWidget({super.key, required this.topics});
 
   @override
   Widget build(BuildContext context) {
-    return topics.length == 0 ? Center(
+    return topics.isEmpty ? Center(
       child: Text(
         "No Topics for this Module",
-        style:  TextStyle(
+        style: TextStyle(
           color: Theme.of(context).colorScheme.inversePrimary,
           fontWeight: FontWeight.bold,
           fontStyle: FontStyle.normal,
           fontSize: Provider.of<ThemeProvider>(context).fontSize
         ),
       ),
-    ):
-    ListView.builder(
+    ) : ListView.builder(
       physics: const BouncingScrollPhysics(),
       itemCount: topics.length,
       itemBuilder: (context, index) {
@@ -45,15 +45,20 @@ class TopicTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
-      shape: const  RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(21))
       ),
       child: ListTile(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder:(context) => TopicPage(topic: topic),));     
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TopicPage(topic: topic), // Assuming TopicPage is defined
+            ),
+          );
         },
         leading: Container(
-          width:Provider.of<ThemeProvider>(context).fontSize + 35,
+          width: Provider.of<ThemeProvider>(context).fontSize + 35,
           padding: const EdgeInsets.all(7.0),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -73,7 +78,7 @@ class TopicTile extends StatelessWidget {
         ),
         title: Text(
           topic.topicName,
-          style:  TextStyle(
+          style: TextStyle(
             color: Theme.of(context).colorScheme.inversePrimary,
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.normal,
@@ -99,4 +104,3 @@ class TopicTile extends StatelessWidget {
     );
   }
 }
-
